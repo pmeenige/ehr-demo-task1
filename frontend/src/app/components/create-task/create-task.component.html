@@ -1,0 +1,67 @@
+<p-toast></p-toast>
+<div class="grid grid-rows-1 grid-flow-col gap-4">
+    <div class="card w-[50rem] mx-auto">
+        <h1 class="mb-base">Create Task</h1>
+        <div class="">
+
+            <div class="flex flex-col gap-2 field ">
+                <label for="title">Title</label>
+                <input pInputText id="title" aria-describedby="username-help" [(ngModel)]="Task.title" />
+                <!-- <small id="username-help">Enter your username to reset your password.</small> -->
+            </div>
+            <div class="flex flex-col gap-2 field ">
+                <label for="description">Description</label>
+                <textarea pInputTextarea id="description" class="w-full" [(ngModel)]="Task.description"></textarea>
+            </div>
+
+            <div class="flex flex-col gap-2 field ">
+                <label for="assignedto">Assigned To</label>
+                <p-select placeholder="Select User"
+                    class="w-full p-inputtext border border-gray-300 rounded-md focus:border-blue-500 focus:outline-none"
+                    [(ngModel)]="Task.assignedTo" [options]="users" />
+            </div>
+            <div class="flex flex-col gap-2 field ">
+                <label for="dueDate">Due Date</label>
+                <p-datepicker class="w-full " [(ngModel)]="Task.dueDate"  dateFormat="yy-mm-dd"/>
+            </div>
+            <div class="flex flex-col gap-2 field ">
+                <label for="priority">Priority</label>
+                <p-select placeholder="Select priority" [options]="priorities" [(ngModel)]="Task.priority"
+                    class="w-full " />
+            </div>
+            <div class="flex flex-wrap gap-4">
+                <div class="flex items-center">
+                    <label for="status" class="ml-2">Status:</label>
+                    <p-radiobutton name="status" value="pending" [(ngModel)]="Task.status" inputId="status" />
+                    <label for="status1" class="ml-2">Pending</label>
+                </div>
+
+                <div class="flex items-center">
+                    <p-radiobutton name="status" value="In-progress" [(ngModel)]="Task.status" inputId="status" />
+                    <label for="status2" class="ml-2">In-Progress</label>
+                </div>
+
+                <div class="flex items-center">
+                    <p-radiobutton name="status" value="completed" [(ngModel)]="Task.status" inputId="status" />
+                    <label for="status3" class="ml-2">Completed</label>
+                </div>
+            </div>
+
+
+            <div class="flex flex-col gap-2 field ">
+                <label for="isRead">Is read</label>
+                <p-checkbox id="isRead" [(ngModel)]="Task.isRead"  binary="true"/>
+
+            </div>
+
+            <div class="flex flex-col gap-2 field ">
+                <div class="flex flex-row gap-4 mt-4">
+                    <p-button label="Create Task" (click)="createTask()"/>
+                    <p-button label="Cancel" severity="danger" (click)="cancel()" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
