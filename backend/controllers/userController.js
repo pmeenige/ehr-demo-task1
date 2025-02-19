@@ -3,6 +3,32 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
+//middleware to verify jwt token
+
+
+const verifyToken = (req, res, next) => {
+  // Get the token from the Authorization header (format: Bearer <token>)
+  const token = req.header('Authorization')?.replace('Bearer ', ''); // Extract token
+
+  // If no token is provided
+  if (!token) {
+    return res.status(403).json({ message: 'Access denied. No token provided.' });
+  }
+
+  try {
+    // Verify the token using the secret key stored in the environment variable
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Attach the decoded user information to the request object (e.g., userId)
+    req.user = decoded;
+
+    // Proceed to the next middleware or route handler
+    next();
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ message: 'Invalid or expired token.' });
+  }
+};
 
 
 //login user
@@ -20,8 +46,8 @@ const loginUser = async (req,res)=>{
       return res.status(400).json({message:'Incorrect password'});
     }
 
-    const token =jwt.sign({userId: user._id},'your_secret_key',{
-      expiresIn:'1h'
+    const token =jwt.sign({userId: user._id},process.env.JWT_SECRET,{
+      expiresIn:'1m'
     });
 
     res.status(200).json({
@@ -101,5 +127,14 @@ const addUser = async (req, res) => {
 //     res.status(500).json({message: 'Server error'});
 //   }
 // };
-
-module.exports = { addUser,loginUser};
+const getSignupUserDetails = async(req,res)=>{
+  try{
+    const users = await User.find()
+    return res.status(200).json({message:'got users',users:users}); 
+  }
+  catch(error){
+    console.log('Error fetching the users');
+    res.status(500).json({message:'Server error'})
+  }
+};
+module.exports = { addUser,loginUser,getSignupUserDetails,verifyToken};

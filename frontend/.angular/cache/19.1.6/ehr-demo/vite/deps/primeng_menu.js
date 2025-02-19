@@ -1,14 +1,7 @@
 import {
-  Badge,
-  BadgeModule
-} from "./chunk-E467GEZW.js";
-import {
   Tooltip,
   TooltipModule
-} from "./chunk-7D6OSERQ.js";
-import {
-  Ripple
-} from "./chunk-KQ3T7JYG.js";
+} from "./chunk-EEGWDFW5.js";
 import {
   zindexutils
 } from "./chunk-TPQC65W5.js";
@@ -19,14 +12,31 @@ import {
   trigger
 } from "./chunk-GM2FJXED.js";
 import {
+  Badge,
+  BadgeModule
+} from "./chunk-ZOF22EMZ.js";
+import {
   ConnectedOverlayScrollHandler
 } from "./chunk-5G7WYC4N.js";
 import {
+  Ripple
+} from "./chunk-H3DPLAXV.js";
+import {
   BaseComponent
-} from "./chunk-BVQRAM2H.js";
+} from "./chunk-REV46HEM.js";
 import {
   BaseStyle
-} from "./chunk-POZDFVE7.js";
+} from "./chunk-IJ2TUJHL.js";
+import "./chunk-CWYBPNCF.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-CG5GVDT7.js";
+import {
+  DomSanitizer
+} from "./chunk-WRCFG4QG.js";
+import "./chunk-M6UGKBWU.js";
 import {
   OverlayService,
   PrimeTemplate,
@@ -39,18 +49,8 @@ import {
   isTouchDevice,
   relativePosition,
   uuid
-} from "./chunk-UHCODLKS.js";
-import "./chunk-TZIJKBMI.js";
-import "./chunk-YAPJLE7E.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-CG5GVDT7.js";
-import {
-  DomSanitizer
-} from "./chunk-WRCFG4QG.js";
-import "./chunk-M6UGKBWU.js";
+} from "./chunk-M7NJUUPE.js";
+import "./chunk-NJ25EVEJ.js";
 import {
   CommonModule,
   NgClass,

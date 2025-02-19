@@ -2,16 +2,17 @@
     <!-- sidebar -->
         <div class="hidden md:flex flex-col w-100 bg-gray-800">
             <p-drawer [(visible)]="visible" [closable]="false" [position]="'left'" header="">
-                <!-- Header Section with Image -->
-                <div class="flex items-center justify-center h-16 bg-gray-100 shadow-md ">
-                    <img class="w-auto h-8 mr-2" src="images/logo.svg" alt="logo">
-                </div>
+                
                
                 <!-- Navigation Section -->
                 <div class="flex flex-col flex-1 overflow-y-auto">
                     <nav class="flex-1  py-4 bg-white">
+                        <a  (click)="toggleDashboard()"class="flex items-center px-4 py-2 mt-2 text-gray-700 hover:bg-gray-100 gap-4" role="button">
+                            <i class="pi pi-home"></i>
+                            Dashboard
+                        </a>
                         <a  (click)="toggleCreateForm()"class="flex items-center px-4 py-2 mt-2 text-gray-700 hover:bg-gray-100 gap-4" role="button">
-                            <i class="pi pi-comment"></i>
+                            <i class="pi pi-plus"></i>
                             Create Task
                         </a>
                         <!-- <a (click)="toggleViewTasks()"  class="flex items-center px-4 py-2 mt-2 text-gray-700 hover:bg-gray-100 gap-4">
@@ -19,7 +20,7 @@
                             Edit Task
                         </a> -->
                         <a (click)="toggleViewTasks()" class="flex items-center px-4 py-2 mt-2 text-gray-700 hover:bg-gray-100 gap-4">
-                            <i class="pi pi-comment"></i>
+                            <i class="pi pi-eye"></i>
                             View Task
                         </a>
                         <!-- <a (click)="toggleDeleteTasks()" class="flex items-center px-4 py-2 mt-2 text-gray-700 hover:bg-gray-100 gap-4">
@@ -45,7 +46,11 @@
                 <button (click)="visible = true">
                     <i class="pi pi-bars"></i>
                 </button>
-                <input class="mx-4 w-full border rounded-md px-4 py-2" type="text" placeholder="Search">
+                <!-- Header Section with Image -->
+                <div class="flex items-center justify-center h-16 ml-5 ">
+                    <img class="w-auto h-8 mr-2" src="images/logo.svg" alt="logo">
+                </div>
+                <!-- <input class="mx-4 w-full border rounded-md px-4 py-2" type="text" placeholder="Search"> -->
             </div>
             <div class="flex items-center pr-4">
                 <p-menu #menu [model]="items" [popup]="true" />
@@ -54,7 +59,9 @@
             </div>
         </div>
          <!--body-->
-    <h1>this is the body</h1>
+    <div class="flex items-center justify-center min-h-screen" *ngIf="visibleHeading">
+        <h1>Welcome to Task Manager</h1>
+    </div>
     <app-create-task *ngIf="createFormVisible" (cancelCreate)="closeCreateForm()"></app-create-task>
     <app-tasks *ngIf="viewTasksVisible"></app-tasks>
     <app-edit *ngIf="isTaskEditFormVisible" (cancelEdit)="closeEditForm()"></app-edit>

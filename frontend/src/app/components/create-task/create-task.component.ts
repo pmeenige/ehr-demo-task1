@@ -50,13 +50,24 @@ export class CreateTaskComponent {
       status:'',
       isRead:'false'
     };
-  users=[
-    "User1","User2","User3"
-  ];
+    users : string[] = []
   priorities = [
    "low","medium","high"
   ];
-
+  ngOnInit():void{
+    this.apiService.getUserSignupDetailsApi().subscribe(
+      (response)=>{
+        console.log('users:',response.users)
+        const users : any []=response.users
+        const user_first_names= users.map(user=>
+          user.first_name
+        )
+       console.log(user_first_names)
+       this.users=user_first_names
+      },(error)=>{
+        console.log('Error occured while reading the users');
+      });
+  }
   constructor(private apiService:ApiService, private messageService:MessageService,private router:Router, private sharedDataService:SharedDataService){}
 
   createTask(){
@@ -64,14 +75,17 @@ export class CreateTaskComponent {
       title: this.Task.title,
       description: this.Task.description,
       assignedTo: this.Task.assignedTo,// Fix: Extract string value
-      dueDate: new Date(this.Task.dueDate).toISOString(),  // Fix: Convert Date object to ISO format
+      dueDate: this.Task.dueDate ? new Date(this.Task.dueDate).toISOString() : "",  // Fix: Convert Date object to ISO format
       priority: this.Task.priority, // Fix: Extract string value
       status: this.Task.status,
       isRead: Boolean(this.Task.isRead)  // Fix: Convert string to boolean
     };
   
     console.log('Creating Task:', formattedTask);  // Debugging log
-  
+    if(!formattedTask.title || !formattedTask.assignedTo || !formattedTask.dueDate || !formattedTask.priority || !formattedTask.status){
+      alert("Please Fill the fields that are empty");
+      return;
+    }
     this.apiService.addTaskApi(formattedTask).subscribe({
       next:(response)=>{
         console.log('Task created:',response);
@@ -80,9 +94,11 @@ export class CreateTaskComponent {
         this.sharedDataService.setUpdateForm(false)
         this.sharedDataService.setCreateForm(false)
         this.sharedDataService.setViewForm(true)
+        alert("Task created successfully")
       },
       error:(err)=>{
         console.error('Error creating task:',err);
+        //alert(`this is from alert ${err.error}`);
         this.messageService.add({severity:'error',summary:'Error',detail:'failed to create task'});
       }
     });

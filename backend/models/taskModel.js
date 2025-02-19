@@ -31,6 +31,7 @@ const taskSchema = new mongoose.Schema(
       required: true,
       enum: ['pending', 'in-progress', 'completed'],
       lowercase:true,
+      
     },
     isRead: {
       type: Boolean,

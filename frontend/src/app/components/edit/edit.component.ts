@@ -36,7 +36,7 @@ export interface Task {
   description: string;
   assignedTo: string;
   priority: string;
-  dueDate: string;
+  dueDate: string | Date;
   status: string;
   isRead: boolean;
   isDeleted: boolean;
@@ -67,7 +67,7 @@ export class EditComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task updated successfully' });
         this.taskUpdated.emit();
         // this.router.navigate(['/dashboard']);
-        this.SharedDataService.setUpdateForm(false)
+        this.SharedDataService.setUpdateForm(false)//reset the forms
         this.SharedDataService.setViewForm(true)
       },
       error: () => {
@@ -91,9 +91,7 @@ export class EditComponent implements OnInit {
   //   updatedAt: ''
   // };
 
-  users = [
-    "user1", "user2", "user3"
-  ];
+  users : string[] = []
   priorities = [
     "low", "medium", "high"
   ];
@@ -106,9 +104,28 @@ export class EditComponent implements OnInit {
     //   this.task = { ...this.taskUpdated  };
     // }
     this.SharedDataService.taskToUpdate$.subscribe((task) => {
-      this.task = task;
-    })
-
+      console.log(task.assignedTo)
+      if(task){
+        this.task = task;
+        if(this.task.dueDate && typeof this.task.dueDate === 'string'){
+          this.task.dueDate = new Date(this.task.dueDate)
+          this.task.assignedTo = task.assignedTo
+        }
+      }
+    });
+    this.apiService.getUserSignupDetailsApi().subscribe(
+      (response)=>{
+        console.log('users:',response.users)
+        const users : any []=response.users
+        const user_first_names= users.map(user=>
+          user.first_name
+        )
+       console.log(user_first_names)
+       this.users=user_first_names
+      },(error)=>{
+        console.log('Error occured while reading the users');
+      });
+    
   }
   cancel() {
     this.SharedDataService.setUpdateForm(false)

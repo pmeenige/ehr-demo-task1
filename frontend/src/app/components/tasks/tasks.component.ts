@@ -27,7 +27,6 @@ import { EditComponent } from '../edit/edit.component';
 import { CommonModule } from '@angular/common';
 import { SharedDataService } from '../../shared-data.service';
 import { Router } from '@angular/router';
-import { DeleteComponent } from "../delete/delete.component";
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { EventEmitter } from '@angular/core';
@@ -48,7 +47,7 @@ export interface Task {
 }
 @Component({
   selector: 'app-tasks',
-  imports: [ButtonModule, SelectButtonModule, DropdownModule, DialogModule, CommonModule, RadioButtonModule, EditComponent, ListboxModule, FloatLabelModule, DatePickerModule, CheckboxModule, AvatarModule, CardModule, TableModule, AvatarGroupModule, MenuModule, ToastModule, InputTextModule, MultiSelectModule, FormsModule, SelectModule, TagModule, IconFieldModule, InputIconModule, DrawerModule, DeleteComponent],
+  imports: [ButtonModule, SelectButtonModule, DropdownModule, DialogModule, CommonModule, RadioButtonModule, EditComponent, ListboxModule, FloatLabelModule, DatePickerModule, CheckboxModule, AvatarModule, CardModule, TableModule, AvatarGroupModule, MenuModule, ToastModule, InputTextModule, MultiSelectModule, FormsModule, SelectModule, TagModule, IconFieldModule, InputIconModule, DrawerModule],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss',
 })

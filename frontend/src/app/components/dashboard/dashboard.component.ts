@@ -47,8 +47,9 @@ export class DashboardComponent {
   viewTasksVisible = false;
   editTasksVisible = false;
   isTaskEditFormVisible = false;
-
+  visibleHeading =true;
   selectedTask = null;
+  tokencheckInterval : any;
   constructor(private primeng: PrimeNG, private SharedDataService: SharedDataService, private router: Router) { }
 
 
@@ -56,19 +57,23 @@ export class DashboardComponent {
 
   ngOnInit(): void {
 
-
+    this.SharedDataService.visibleHeading$.subscribe((vs)=>{
+      this.visibleHeading = vs ;
+    });
 
     this.SharedDataService.isTaskEditFormVisible$.subscribe((vs) => {
       this.isTaskEditFormVisible = vs;
     });
 
-    // Subscribe to taskUpdated event (if you're emitting it from the EditComponent)
-    this.SharedDataService. taskToUpdate$ .subscribe(() => {
-      this.isTaskEditFormVisible = false;  // Close the edit form
-      this.toggleViewTasks();  // Switch back to the view tasks form
-    });
+    // // Subscribe to taskUpdated event (if you're emitting it from the EditComponent)
+    // this.SharedDataService. taskToUpdate$ .subscribe(() => {
+    //   this.isTaskEditFormVisible = false;  // Close the edit form
+    //   this.toggleViewTasks();  // Switch back to the view tasks form
+    // });
 
- 
+    this.SharedDataService.visible$.subscribe((state)=>{
+      this.visible=state
+    })
 
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -95,6 +100,10 @@ export class DashboardComponent {
 
 
     this.primeng.ripple.set(true);
+
+    this.tokencheckInterval = setInterval(()=> this.checkTokenExpiry(),1000);
+    this.checkTokenExpiry();
+
     this.SharedDataService.isTaskEditFormVisible$.subscribe((vs) => {
       this.isTaskEditFormVisible = vs;
     })
@@ -105,45 +114,91 @@ export class DashboardComponent {
       this.createFormVisible = vs
     })
   }
+  
 
+  ngOnDestroy() : void{
+    if(this.tokencheckInterval){
+      clearInterval(this.tokencheckInterval);
+    }
+  }
+  checkTokenExpiry(){
+    const token = localStorage.getItem('jwtToken');
+    if(!token){
+      this.logout();
+      return;
+    }
+    const tokenPayload = this.decodeToken(token);
+    if(tokenPayload && tokenPayload.exp *1000 < Date.now()){
+      this.logout();
+    }
+  }
+  decodeToken(token: string){
+    try{
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g,'+').replace(/_/,'/');
+      const decoded = JSON.parse(window.atob(base64));
+      return decoded;
+    }
+    catch(error){
+      console.log('Error decoding token',error);
+      return null;
+    }
+  }
   toggleDarkMode() {
     const element = document.querySelector('html');
     element && element.classList.toggle('dark-theme');
+  }
+  toggleDashboard() {
+    this.SharedDataService.setCreateForm(false)
+    this.SharedDataService.setUpdateForm(false)
+    this.SharedDataService.setViewForm(false)
+    this.SharedDataService.setVisibilityofSidebar(false)
+    this.SharedDataService.setVisibilityofHeading(true)
+    
   }
   toggleCreateForm() {
     this.SharedDataService.setCreateForm(true)
     this.SharedDataService.setUpdateForm(false)
     this.SharedDataService.setViewForm(false)
-    // this.createFormVisible=true;
-    // this.viewTasksVisible=false;
-    // this.editTasksVisible=false;
+    this.SharedDataService.setVisibilityofSidebar(false)
+    this.SharedDataService.setVisibilityofHeading(false)
+   
   }
   closeCreateForm() {
-    this.createFormVisible = false;
+    this.SharedDataService.setCreateForm(false)
+    this.SharedDataService.setVisibilityofHeading(true)
   }
   toggleViewTasks() {
-    this.viewTasksVisible = true;
-    this.createFormVisible = false;
-    this.editTasksVisible = false;
+   
+    this.SharedDataService.setViewForm(true)
+    this.SharedDataService.setCreateForm(false)
+    this.SharedDataService.setUpdateForm(false)
+    this.SharedDataService.setVisibilityofSidebar(false)
+    this.SharedDataService.setVisibilityofHeading(false)
   }
   
   toggledEditForm(task: any) {
     this.selectedTask = task;
-    this.viewTasksVisible = false;
-    this.createFormVisible = false;
-    this.editTasksVisible = true;
+    
+    this.SharedDataService.setCreateForm(false)
+    this.SharedDataService.setViewForm(false)
+    this.SharedDataService.setUpdateForm(true)
+    
   }
   toggleDeleteTasks() {
-    this.viewTasksVisible = true;
-    this.createFormVisible = false;
-    this.editTasksVisible = false;
+    // this.viewTasksVisible = true;
+    // this.createFormVisible = false;
+    // this.editTasksVisible = false;
+    this.SharedDataService.setViewForm(true)
+    this.SharedDataService.setCreateForm(false)
+    this.SharedDataService.setUpdateForm(false)
   }
   closeEditForm() {
     this.editTasksVisible = false;
     this.selectedTask = null;
   }
   logout() {
-    localStorage.removeItem('token');
+    localStorage.removeItem('jwtToken');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }

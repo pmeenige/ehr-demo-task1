@@ -49,7 +49,7 @@ export class LoginComponent {
         console.log('Log in successfull:',response);
         alert('Login successfull');
         localStorage.setItem('user', JSON.stringify(this.user));  // Store user data in localStorage
-        localStorage.setItem('token',response.token);
+        localStorage.setItem('jwtToken',response.token);
         this.router.navigate(['/dashboard']);
       },
       error:(error)=>{
